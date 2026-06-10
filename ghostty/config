@@ -1,0 +1,5 @@
+background-opacity = 0.85
+background-blur-radius = 20
+background-image = /Users/joey.marra/Downloads/ogbg.png
+background-image-opacity = 0.1
+background-image-fit = cover
