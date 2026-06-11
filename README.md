@@ -25,8 +25,13 @@ Personal config for Ghostty, Zellij, and Neovim. All three are themed with Catpp
 | `viw` / `diw` / `ciw` | Select / delete / change word under cursor |
 | `vi"` / `ci"` | Select / change inside quotes |
 | `vi(` / `ci(` | Select / change inside parens |
-| `vi{` | Select inside braces (function body) |
-| `va{` | Select around braces (includes the `{}`) |
+| `vi{` / `va{` | Select inside / around braces |
+| `vaf` / `daf` / `caf` | Select / delete / change whole function (treesitter) |
+| `vif` / `dif` / `cif` | Select / delete / change function body only (treesitter) |
+| `vac` / `vic` | Select around / inside class (treesitter) |
+| `vaa` / `via` | Select around / inside argument (treesitter) |
+| `]f` / `[f` | Jump to next / previous function |
+| `]c` / `[c` | Jump to next / previous class |
 | `V` + `j/k` | Select whole lines |
 | `vap` | Select whole paragraph (blank-line-delimited block) |
 | `ggVG` | Select entire file |
