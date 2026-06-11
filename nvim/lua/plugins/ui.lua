@@ -147,13 +147,80 @@ return {
     end,
   },
 
-  -- 10. Make it rain easter egg
+  -- 10. Make it rain easter egg + custom animations
   {
     "eandrju/cellular-automaton.nvim",
     keys = {
       { "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>", desc = "Make it Rain" },
-      { "<leader>gol", "<cmd>CellularAutomaton game_of_life<CR>",  desc = "Game of Life" },
+      { "<leader>gol", "<cmd>CellularAutomaton game_of_life<CR>", desc = "Game of Life" },
+      { "<leader>scr", "<cmd>CellularAutomaton scramble<CR>",     desc = "Scramble" },
+      { "<leader>mtr", "<cmd>CellularAutomaton matrix<CR>",       desc = "Matrix Rain" },
     },
+    config = function()
+      local ca = require("cellular-automaton")
+
+      -- Scramble: each cell randomly copies a neighbor each frame -> dissolve/glitch effect
+      ca.register_animation({
+        fps = 50,
+        name = "scramble",
+        update = function(grid)
+          local snap = {}
+          for i = 1, #grid do
+            snap[i] = {}
+            for j = 1, #grid[i] do
+              snap[i][j] = { char = grid[i][j].char, hl_group = grid[i][j].hl_group }
+            end
+          end
+          for i = 1, #grid do
+            for j = 1, #grid[i] do
+              local pool = { snap[i][j] }
+              if snap[i - 1] then table.insert(pool, snap[i - 1][j]) end
+              if snap[i + 1] then table.insert(pool, snap[i + 1][j]) end
+              if snap[i][j - 1] then table.insert(pool, snap[i][j - 1]) end
+              if snap[i][j + 1] then table.insert(pool, snap[i][j + 1]) end
+              local pick = pool[math.random(#pool)]
+              grid[i][j].char = pick.char
+              grid[i][j].hl_group = pick.hl_group
+            end
+          end
+          return true
+        end,
+      })
+
+      -- Matrix rain: columns of new random chars continuously fall, with staggered stream starts
+      local matrix_streams = nil
+      ca.register_animation({
+        fps = 10,
+        name = "matrix",
+        update = function(grid)
+          local rows = #grid
+          if rows == 0 then return true end
+          local cols = #grid[1]
+          if not matrix_streams or #matrix_streams ~= cols then
+            matrix_streams = {}
+            for j = 1, cols do
+              matrix_streams[j] = -math.random(0, rows)
+            end
+          end
+          for j = 1, cols do
+            matrix_streams[j] = matrix_streams[j] + 1
+            if matrix_streams[j] > rows + math.random(5, 20) then
+              matrix_streams[j] = -math.random(0, rows)
+            end
+            for i = rows, 2, -1 do
+              grid[i][j].char     = grid[i - 1][j].char
+              grid[i][j].hl_group = grid[i - 1][j].hl_group
+            end
+            if matrix_streams[j] >= 1 then
+              grid[1][j].char = string.char(math.random(33, 126))
+            else
+              grid[1][j].char = " "
+            end
+          end
+          return true
+        end,
+      })
+    end,
   },
 
   -- 11. Falling snow/stars on dashboard
