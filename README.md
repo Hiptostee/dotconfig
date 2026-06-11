@@ -282,6 +282,16 @@ DAP (Debug Adapter Protocol) configured for C and C++ via codelldb.
 
 ---
 
+## Install on a new machine
+
+```bash
+curl -o start.sh https://raw.githubusercontent.com/Hiptostee/dotconfig/main/start.sh && bash start.sh
+```
+
+This backs up any existing `~/.config` to `~/.config.bak`, then clones this repo into `~/.config`. If dotconfig is already installed it just pulls the latest.
+
+---
+
 ## First-time setup
 
 1. Install [lazy.nvim](https://github.com/folke/lazy.nvim) (auto-bootstrapped on first `nvim` launch)
