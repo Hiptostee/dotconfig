@@ -102,6 +102,14 @@ return {
     opts = {},
   },
 
+  -- 4b. Surround (ys/cs/ds motions for wrapping text)
+  {
+    "kylechui/nvim-surround",
+    version = "*",
+    event = "VeryLazy",
+    opts = {},
+  },
+
   -- 5. Auto-format on save (clang-format for C/C++)
   {
     "stevearc/conform.nvim",
