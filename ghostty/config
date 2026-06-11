@@ -4,3 +4,6 @@ background-blur-radius = 20
 background-image = /Users/joey.marra/Downloads/ogbg.png
 background-image-opacity = 0.1
 background-image-fit = cover
+font-family = MesloLGS NF
+font-size = 14
+cursor-style = block
