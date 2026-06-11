@@ -28,6 +28,12 @@ return {
         },
       })
 
+      vim.lsp.config("eslint", {
+        settings = {
+          workingDirectories = { { mode = "auto" } },
+        },
+      })
+
       vim.lsp.enable({ "clangd", "ts_ls", "eslint", "ruby_lsp" })
 
       -- Keymaps applied whenever any LSP attaches
