@@ -4,6 +4,60 @@ Personal config for Ghostty, Zellij, and Neovim. All three are themed with Catpp
 
 ---
 
+## Essential Vim Keybinds
+
+### Lines
+| Key | Action |
+|---|---|
+| `o` | New line below, enter insert |
+| `O` | New line above, enter insert |
+| `A` | Insert at end of line |
+| `I` | Insert at start of line |
+| `yy` | Copy line |
+| `dd` | Delete line |
+| `p` / `P` | Paste below / above cursor |
+| `cc` | Delete line and enter insert |
+| `J` | Join line below to current |
+
+### Selecting & editing text
+| Key | Action |
+|---|---|
+| `viw` / `diw` / `ciw` | Select / delete / change word under cursor |
+| `vi"` / `ci"` | Select / change inside quotes |
+| `vi(` / `ci(` | Select / change inside parens |
+| `vi{` | Select inside braces (function body) |
+| `va{` | Select around braces (includes the `{}`) |
+| `V` + `j/k` | Select whole lines |
+| `vap` | Select whole paragraph (blank-line-delimited block) |
+| `ggVG` | Select entire file |
+
+### Surround (nvim-surround)
+| Key | Action |
+|---|---|
+| `ysiw"` | Wrap word in `"` |
+| `ysiw)` | Wrap word in `()` |
+| `cs"'` | Change `"` to `'` |
+| `ds"` | Remove surrounding `"` |
+| `S"` | Wrap visual selection in `"` |
+
+### Navigation
+| Key | Action |
+|---|---|
+| `{` / `}` | Jump to previous / next blank line |
+| `%` | Jump to matching bracket |
+| `*` | Search for word under cursor |
+| `gg` / `G` | Top / bottom of file |
+| `Ctrl o` / `Ctrl i` | Jump back / forward in jump list |
+| `zz` | Center screen on cursor |
+
+### Undo / redo
+| Key | Action |
+|---|---|
+| `u` | Undo |
+| `Ctrl r` | Redo |
+
+---
+
 ## Ghostty
 
 | Setting | Value |
