@@ -9,7 +9,7 @@ return {
     config = function()
       require("mason").setup()
       require("mason-lspconfig").setup({
-        ensure_installed = { "clangd", "ts_ls", "eslint" },
+        ensure_installed = { "clangd", "ts_ls", "eslint", "ruby_lsp", "rubocop" },
       })
 
       -- Share capabilities with all servers
@@ -28,7 +28,7 @@ return {
         },
       })
 
-      vim.lsp.enable({ "clangd", "ts_ls", "eslint" })
+      vim.lsp.enable({ "clangd", "ts_ls", "eslint", "ruby_lsp" })
 
       -- Keymaps applied whenever any LSP attaches
       vim.api.nvim_create_autocmd("LspAttach", {

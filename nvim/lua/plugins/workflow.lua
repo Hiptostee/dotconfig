@@ -117,6 +117,7 @@ return {
           json             = { "prettier" },
           css              = { "prettier" },
           html             = { "prettier" },
+          ruby             = { "rubocop" },
         },
         format_on_save = {
           timeout_ms = 500,
@@ -129,6 +130,19 @@ return {
   -- 6. Rails navigation
   {
     "tpope/vim-rails",
+  },
+
+  -- 7. Run RSpec (and other test frameworks) with leader keys
+  {
+    "vim-test/vim-test",
+    dependencies = { "akinsho/toggleterm.nvim" },
+    config = function()
+      vim.g["test#strategy"] = "toggleterm"
+      vim.keymap.set("n", "<leader>tn", "<cmd>TestNearest<CR>", { desc = "Test Nearest" })
+      vim.keymap.set("n", "<leader>tf", "<cmd>TestFile<CR>",    { desc = "Test File" })
+      vim.keymap.set("n", "<leader>ta", "<cmd>TestSuite<CR>",   { desc = "Test Suite" })
+      vim.keymap.set("n", "<leader>tl", "<cmd>TestLast<CR>",    { desc = "Test Last" })
+    end,
   },
 
   -- 7. Harpoon 2

@@ -114,7 +114,51 @@ return {
     "HiPhish/rainbow-delimiters.nvim",
   },
 
-  -- 9. Noice (fancy cmdline, LSP progress, notifications)
+  -- 9. Smooth animations (cursor, scroll, windows)
+  {
+    "echasnovski/mini.animate",
+    version = "*",
+    config = function()
+      require("mini.animate").setup()
+    end,
+  },
+
+  -- 10. Make it rain easter egg
+  {
+    "eandrju/cellular-automaton.nvim",
+    keys = {
+      { "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>", desc = "Make it Rain" },
+      { "<leader>gol", "<cmd>CellularAutomaton game_of_life<CR>",  desc = "Game of Life" },
+    },
+  },
+
+  -- 11. Falling snow/stars on dashboard
+  {
+    "folke/drop.nvim",
+    event = "VimEnter",
+    config = function()
+      require("drop").setup({
+        theme = "stars",
+        max = 40,
+        interval = 100,
+        screensaver = 1000 * 60 * 5,
+        filetypes = { "dashboard", "alpha" },
+      })
+    end,
+  },
+
+  -- 12. Inline hex/rgb/hsl color swatches
+  {
+    "brenoprata10/nvim-highlight-colors",
+    config = function()
+      require("nvim-highlight-colors").setup({
+        render = "background",
+        enable_tailwind = true,
+      })
+    end,
+  },
+
+  -- 13. Noice (fancy cmdline, LSP progress, notifications)
   {
     "folke/noice.nvim",
     event = "VeryLazy",

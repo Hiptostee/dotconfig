@@ -7,3 +7,6 @@ background-image-fit = cover
 font-family = MesloLGS NF
 font-size = 14
 cursor-style = block
+window-padding-x = 12
+window-padding-y = 8
+theme = catppuccin-mocha
