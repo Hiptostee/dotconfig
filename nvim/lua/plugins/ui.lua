@@ -159,6 +159,61 @@ return {
     config = function()
       local ca = require("cellular-automaton")
 
+      local matrix_gradient = {
+        { "MatrixHead", "#ccffcc", true  },
+        { "MatrixG1",   "#00ff41", false },
+        { "MatrixG2",   "#00e83b", false },
+        { "MatrixG3",   "#00d135", false },
+        { "MatrixG4",   "#00bb30", false },
+        { "MatrixG5",   "#00a52a", false },
+        { "MatrixG6",   "#009024", false },
+        { "MatrixG7",   "#007c1f", false },
+        { "MatrixG8",   "#006c1c", false },
+      }
+      for _, g in ipairs(matrix_gradient) do
+        vim.api.nvim_set_hl(0, g[1], { fg = g[2], bold = g[3] })
+      end
+
+      -- Patch the loader: get_captures_at_pos misses many cells (operators,
+      -- plain identifiers, whitespace). inspect_pos sees all highlight sources.
+      -- Falls back to a char-based palette for anything still uncolored.
+      local hl_palette = { "Function", "Keyword", "String", "Number", "Type", "Special", "Identifier" }
+      local load_mod = require("cellular-automaton.load")
+      local _orig_load = load_mod.load_base_grid
+      load_mod.load_base_grid = function(window, buffer)
+        local grid = _orig_load(window, buffer)
+        local start_row = vim.fn.line("w0") - 1
+        local start_col = vim.fn.winsaveview().leftcol
+        for i, row in ipairs(grid) do
+          for j, cell in ipairs(row) do
+            if cell.char ~= " " and (cell.hl_group == nil or cell.hl_group == "") then
+              local ok, pos = pcall(vim.inspect_pos, buffer, start_row + i - 1, start_col + j - 1)
+              if ok and pos then
+                for _, ts in ipairs(pos.treesitter or {}) do
+                  if ts.hl_group and ts.hl_group ~= "" then
+                    cell.hl_group = ts.hl_group
+                    break
+                  end
+                end
+                if not cell.hl_group or cell.hl_group == "" then
+                  for _, syn in ipairs(pos.syntax or {}) do
+                    if syn.hl_group and syn.hl_group ~= "" then
+                      cell.hl_group = syn.hl_group
+                      break
+                    end
+                  end
+                end
+              end
+              -- final fallback: deterministic color from char byte value
+              if not cell.hl_group or cell.hl_group == "" then
+                cell.hl_group = hl_palette[(string.byte(cell.char) % #hl_palette) + 1]
+              end
+            end
+          end
+        end
+        return grid
+      end
+
       -- Scramble: each cell randomly copies a neighbor each frame -> dissolve/glitch effect
       ca.register_animation({
         fps = 50,
@@ -199,22 +254,42 @@ return {
           if not matrix_streams or #matrix_streams ~= cols then
             matrix_streams = {}
             for j = 1, cols do
-              matrix_streams[j] = -math.random(0, rows)
+              matrix_streams[j] = -math.random(0, rows * 2)
             end
           end
           for j = 1, cols do
             matrix_streams[j] = matrix_streams[j] + 1
             if matrix_streams[j] > rows + math.random(5, 20) then
-              matrix_streams[j] = -math.random(0, rows)
+              matrix_streams[j] = -math.random(rows, rows * 2)
             end
             for i = rows, 2, -1 do
               grid[i][j].char     = grid[i - 1][j].char
               grid[i][j].hl_group = grid[i - 1][j].hl_group
             end
             if matrix_streams[j] >= 1 then
-              grid[1][j].char = string.char(math.random(33, 126))
+              grid[1][j].char     = string.char(math.random(33, 126))
+              grid[1][j].hl_group = "MatrixHead"
             else
-              grid[1][j].char = " "
+              grid[1][j].char     = " "
+              grid[1][j].hl_group = "Normal"
+            end
+            -- remap trail colors by fractional depth (screen-size independent)
+            for i = 2, rows do
+              local c = grid[i][j].char
+              if c ~= " " and c ~= "" then
+                local f = (i - 1) / rows
+                local hl
+                if     i == 2   then hl = "MatrixG1"
+                elseif f < 0.08 then hl = "MatrixG2"
+                elseif f < 0.18 then hl = "MatrixG3"
+                elseif f < 0.30 then hl = "MatrixG4"
+                elseif f < 0.44 then hl = "MatrixG5"
+                elseif f < 0.60 then hl = "MatrixG6"
+                elseif f < 0.76 then hl = "MatrixG7"
+                else                 hl = "MatrixG8"
+                end
+                grid[i][j].hl_group = hl
+              end
             end
           end
           return true
